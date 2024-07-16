@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <style>
+        div.login-button {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Авторизация
+{% endblock %}
+
+{% block content %}
+<div class="mt-3">
+    <h4>Авторизация пользователя</h4>
+</div>
+<div class="mt-3 d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group mb-3">
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-outline-dark" type="submit">Войти</button>
+       
+    </form>
+</div>
+<div class="mt-5">
+    <p>Нет аккаунта?</p>
+    <form class="d-flex justify-content-center" action="{% url 'register' %}">
+        <button class="btn btn-outline-dark" type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+{% endblock %}
