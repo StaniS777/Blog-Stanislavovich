@@ -47,6 +47,17 @@
                                         </div>
                                     </button>
                                 </div>
+                                {% if public.comment_public.all %}
+                                <div class="class mt-5">
+                                    Последний комментарий:
+                                    <hr>          
+                                
+                                            {{ public.comment_public.reverse.first.author_comment }} <br>
+                                            {{ public.comment_public.reverse.first.create_date_comment }} <br>
+                                            {{ public.comment_public.reverse.first.text }}
+                                    <hr>
+                                    {% endif %}
+                                </div>
                     </div>                        
             </div>
         </div>

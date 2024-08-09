@@ -76,8 +76,29 @@
                             </button>
                         </div>
                 </div>
+                <div class="mt-3"> 
+                    <p>Комментарии:</p>
+                    <hr>
+                        {% for item in public.comment_public.all|dictsortreversed:"create_date_comment" %}
+                            <ul>
+                                {{ item.author_comment }} <br>
+                                {{ item.create_date_comment }} <br>
+                                {{ item.text }}
+                            </ul>
+                        {% endfor %}
+                    <hr>
+                    <form action="" id="add_form" method="post">  
+                        {% csrf_token %}
+                        {{form.as_p}}
+                    </form>
+                    <button form="add_form" type="submit" class="btn btn-primary">Комментировать</button>
+                </div>
             </div>
+            
+
+           
 </div>
+    
 
 {% endblock %}
 

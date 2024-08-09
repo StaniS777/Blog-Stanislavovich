@@ -6,6 +6,7 @@ from django.db.models.query import QuerySet
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.edit import FormMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import (
@@ -14,21 +15,38 @@ from django.views.generic import (
     ListView,
 )
 from django.template.loader import render_to_string
-from publication.forms import PublicUpdateCreateForm
-from publication.models import Public
+from publication.forms import PublicUpdateCreateForm, CommentForm
+from publication.models import Comment, Public
 
 
-class PublicDetailView(DetailView):
+class PublicDetailView(FormMixin, DetailView):
     template_name = "public_detail.html"
     model = Public
     queryset = Public.objects.select_related("author")
+    form_class = CommentForm
+
+    def get_success_url(self, **kwargs) -> str:
+        return reverse_lazy('public_detail', kwargs={'pk':self.get_object().id})
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.publications = self.get_object()
+        self.object.author_comment = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 class PublicListView(ListView):
     model = Public
     template_name = "public_list.html"
     queryset = Public.objects.order_by("-created")
-  
 
 
 class AddLike(LoginRequiredMixin, View):
