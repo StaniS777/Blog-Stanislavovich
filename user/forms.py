@@ -49,4 +49,5 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = (
             'status_profile',
+            'image',
         )

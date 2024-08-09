@@ -14,9 +14,22 @@
 
 
 {% block content %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ user_form.as_p }}
+        <div class="d-flex justify-content-center">
+            <div class="card h-10 mt-2" style="width: 15rem;">
+                <img src="
+                            {% if user.profile.image %}
+                            {{ user.profile.image.url }}
+                            {% else %}
+                            https://flomaster.top/uploads/posts/2023-01/1673563884_flomaster-club-p-profil-risunok-vkontakte-4.jpg
+                            {% endif %}" 
+                            alt="CATEGORY IMAGE"
+                            style="object-fit: cover;"
+                            class="card-img-top h-10">
+            </div>
+        </div>
         {{ profile_form.as_p }}
     <button type="submit">Сохранить изменения</button>
   </form>

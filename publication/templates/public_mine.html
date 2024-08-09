@@ -1,0 +1,97 @@
+{% for public in public_list %}
+        <div id="row-{{public.pk}}" class="row border-bottom mt-3">
+            <div class="col">
+                <div class="d-flex justify-content-center me-3 mt-3">
+                    <div class="card h-100 mt-5" style="width: 50rem;">
+                        {{ public.created }}
+                                <div class="d-flex justify-content-center">
+                                    <a href="{% url 'public_detail' pk=public.pk %}">
+                                        <div class="card h-10 mt-3" style="width: 40rem;">     
+                                            <img src="
+                                                        {% if public.images_public %}
+                                                        {{ public.images_public.url }}
+                                                        {% else %}
+                                                        https://png.klev.club/uploads/posts/2024-05/thumbs/png-klev-club-ofte-p-novii-post-png-15.png
+                                                        {% endif %}" 
+                                                        alt="CATEGORY IMAGE"
+                                                        style="object-fit: cover;"
+                                                        class="card-img-top h-10">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="d-flex justify-content-center me-3 mt-3">
+                                    <h4>{{ public.informations }}</h4>
+                                </div>  
+                                <div>
+                                <div style="margin-top: 10px; width: 80px; height: 30px; margin-left: 650px;" id="like_button_{{public.pk}}" onclick="likePublic('{{ public.pk }}')">                                          
+                                    <button style="background: transparent; box-shadow: none;" type="submit">   
+                                        <div style="width: 20px;">
+                                            <img src="https://png.pngitem.com/pimgs/s/12-129039_thumb-signal-computer-icons-emoji-clip-art-green.png"
+                                                alt="CATEGORY IMAGE"
+                                                style="object-fit: cover;"
+                                                class="card-img-top h-10">
+                                            <span id="likes_{{public.pk}}">{{ public.likes.all.count }}</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                </div>
+                        
+                                <div style="margin-top: -30px; width: 80px; height: 30px; margin-left: 720px;"id="dislike_button_{{public.pk}}" onclick="dislikePublic('{{ public.pk }}')">
+                                    <button style="background: transparent; box-shadow: none;" type="submit">
+                                        <div style="width: 20px;">
+                                            <img src="https://www.pngitem.com/pimgs/m/40-405973_red-thumbs-down-png-png-download-thumbs-down.png"
+                                                alt="CATEGORY IMAGE"
+                                                style="object-fit: cover;"
+                                                class="card-img-top h-10">
+                                            <span id="dislikes_{{public.pk}}">{{ public.dislikes.all.count }}</span>
+                                        </div>
+                                    </button>
+                                </div>
+                    </div>                        
+            </div>
+        </div>
+    {% endfor %}
+
+{% block scripts %}
+    <script>
+        async function likePublic(publicPK) {
+            console.log(publicPK)
+            var url = "{% url 'like' pk='1' %}".replace("1", publicPK)
+            const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                redirect: "follow", // manual, *follow, error
+            });
+            const likeStatus = await response.json() // parses JSON response into native JavaScript objects
+            console.log(likeStatus.status)
+            if (likeStatus.status) {
+                document.getElementById(`likes_${publicPK}`).innerText=likeStatus.like_count
+            } else {
+                document.getElementById(`like-button-${publicPK}`).classList.remove("btn-danger")
+                document.getElementById(`like-button-${publicPK}`).classList.add("btn-success")
+            }
+        }
+
+        async function dislikePublic(publicPK) {
+            console.log(publicPK)
+            var url = "{% url 'dislike' pk='1' %}".replace("1", publicPK)
+            const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                redirect: "follow", // manual, *follow, error
+            });
+            const dislikeStatus = await response.json() // parses JSON response into native JavaScript objects
+            console.log(dislikeStatus.status)
+            if (dislikeStatus.status) {
+                document.getElementById(`dislikes_${publicPK}`).innerText=dislikeStatus.dislike_count
+            } else {
+                document.getElementById(`like-button-${publicPK}`).classList.remove("btn-danger")
+                document.getElementById(`like-button-${publicPK}`).classList.add("btn-success")
+            }
+        }
+    </script>
+{% endblock %}

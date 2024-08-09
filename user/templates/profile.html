@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+
+{% block title %}
+    Мой профиль
+{% endblock %}
+
 {% block styles %}
     <style>
         div.login-button {
@@ -7,15 +12,24 @@
         }
     </style>
 {% endblock %}
-
-{% block title %}
-    Мой профиль
-{% endblock %}
-
 {% block content %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    <div class="d-flex justify-content-center">
+        <div class="card h-10 mt-2" style="width: 15rem;">
+            <img src="
+                        {% if user.profile.image %}
+                        {{ user.profile.image.url }}
+                        {% else %}
+                        https://flomaster.top/uploads/posts/2023-01/1673563884_flomaster-club-p-profil-risunok-vkontakte-4.jpg
+                        {% endif %}" 
+                        alt="CATEGORY IMAGE"
+                        style="object-fit: cover;"
+                        class="card-img-top h-10">
+        </div>
+    </div>
     <h1>{{ user.username }}</h1>
+
 
     <div class="mt-3">
         <h3>{{ user.get_full_name }}</h3>
@@ -23,6 +37,23 @@
     <div class="mt-3">
         {{ user.profile.status_profile }}
     </div>
-    <button class="mt-3" type="submit">Save changes</button>
 </form>
+<h3>Подписан - {{ user.following.all.count }}</h3>
+<h3>Подписчики - {{ user.followers.all.count }}</h3>
+{% if request.user.is_authenticated %}
+    <div class="mt-3">
+        <a class="btn btn-outline-dark" href="{% url 'my_profile_update' %}">Редактировать профиль</a>
+    </div>
+{% endif %}
+
+{% for message in messages %}
+    <ul class="mt-3">
+        <li class="success">{{ message }}</li>
+    </ul>
+{% endfor %}
+
+{% with public_list=user.public.all %}
+    {% include "public_mine.html" %}
+{% endwith %}
+
 {% endblock %}
