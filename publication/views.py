@@ -21,6 +21,7 @@ from publication.models import Public
 class PublicDetailView(DetailView):
     template_name = "public_detail.html"
     model = Public
+    
     queryset = Public.objects.select_related("author")
 
 
@@ -28,7 +29,7 @@ class PublicListView(ListView):
     model = Public
     template_name = "public_list.html"
     queryset = Public.objects.order_by("-created")
-  
+    paginate_by = 10
 
 
 class AddLike(LoginRequiredMixin, View):
