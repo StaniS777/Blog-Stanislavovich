@@ -22,6 +22,7 @@ from publication.models import Comment, Public
 class PublicDetailView(FormMixin, DetailView):
     template_name = "public_detail.html"
     model = Public
+    
     queryset = Public.objects.select_related("author")
     form_class = CommentForm
 
@@ -47,6 +48,8 @@ class PublicListView(ListView):
     model = Public
     template_name = "public_list.html"
     queryset = Public.objects.order_by("-created")
+    paginate_by = 10
+
 
 
 class AddLike(LoginRequiredMixin, View):
