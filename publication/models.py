@@ -30,3 +30,23 @@ class FavoritePublic(models.Model):
         "user.User",
         on_delete=models.CASCADE,
     )
+
+
+class Comment(models.Model):
+    publications = models.ForeignKey(
+        Public, 
+        on_delete=models.CASCADE, 
+        verbose_name='Публикация', 
+        blank=True, null=True, 
+        related_name="comment_public",
+    )
+
+    author_comment = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        verbose_name='Автор комментария', 
+        blank=True, null=True, 
+    )
+
+    create_date_comment = models.DateTimeField(auto_now=True)
+    text = models.TextField(verbose_name='Текст комментария')

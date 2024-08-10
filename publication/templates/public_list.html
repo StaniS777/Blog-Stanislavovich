@@ -83,8 +83,19 @@
                                                 </button>
                                             </div>
                                     </div>
+                            <div class="class mt-5">
+                                {% if public.comment_public.all %}
+                                    Последний комментарий:
+                                    <hr>          
+                                            {{ public.comment_public.reverse.first.author_comment }} 
+                                            {{ public.comment_public.reverse.first.create_date_comment }} <br>
+                                            {{ public.comment_public.reverse.first.text }}
+                                    <hr>
+                                {% endif %}
+                            </div>
                         </div>                        
                 </div>
+                
             </div>
         {% endfor %}
 
